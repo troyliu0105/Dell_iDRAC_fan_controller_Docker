@@ -34,7 +34,7 @@ function retrieve_temperatures () {
   local IS_EXHAUST_TEMPERATURE_SENSOR_PRESENT=$1
   local IS_CPU2_TEMPERATURE_SENSOR_PRESENT=$2
 
-  local DATA=$(ipmitool -I $IDRAC_LOGIN_STRING sdr type temperature | grep degrees)
+  local DATA=$(ipmitool -I $IDRAC_LOGIN_STRING sdr type temperature 2> /dev/null | grep degrees)
 
   # Parse CPU data
   local CPU_DATA=$(echo "$DATA" | grep "3\." | grep -Po '\d{2}')
@@ -60,12 +60,12 @@ function retrieve_temperatures () {
 
 function enable_third_party_PCIe_card_Dell_default_cooling_response () {
   # We could check the current cooling response before applying but it's not very useful so let's skip the test and apply directly
-  ipmitool -I $IDRAC_LOGIN_STRING raw 0x30 0xce 0x00 0x16 0x05 0x00 0x00 0x00 0x05 0x00 0x00 0x00 0x00 > /dev/null
+  ipmitool -I $IDRAC_LOGIN_STRING raw 0x30 0xce 0x00 0x16 0x05 0x00 0x00 0x00 0x05 0x00 0x00 0x00 0x00 > /dev/null 2>&1
 }
 
 function disable_third_party_PCIe_card_Dell_default_cooling_response () {
   # We could check the current cooling response before applying but it's not very useful so let's skip the test and apply directly
-  ipmitool -I $IDRAC_LOGIN_STRING raw 0x30 0xce 0x00 0x16 0x05 0x00 0x00 0x00 0x05 0x00 0x01 0x00 0x00 > /dev/null
+  ipmitool -I $IDRAC_LOGIN_STRING raw 0x30 0xce 0x00 0x16 0x05 0x00 0x00 0x00 0x05 0x00 0x01 0x00 0x00 > /dev/null 2>&1
 }
 
 # Returns :
