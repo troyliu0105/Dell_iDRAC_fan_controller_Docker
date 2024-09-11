@@ -87,7 +87,10 @@ function disable_third_party_PCIe_card_Dell_default_cooling_response () {
 
 # Prepare traps in case of container exit
 function gracefull_exit () {
-  apply_Dell_fan_control_profile
+  # apply_Dell_fan_control_profile
+  ipmitool -I $IDRAC_LOGIN_STRING raw 0x30 0x30 0x01 0x00 > /dev/null 2>&1
+  # default to 15%
+  ipmitool -I $IDRAC_LOGIN_STRING raw 0x30 0x30 0x02 0xff 0x0f > /dev/null 2>&1
   enable_third_party_PCIe_card_Dell_default_cooling_response
   echo "/!\ WARNING /!\ Container stopped, Dell default dynamic fan control profile applied for safety."
   exit 0
